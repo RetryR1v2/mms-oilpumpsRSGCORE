@@ -88,9 +88,36 @@ end)
 
 RegisterNetEvent('mms-oilpump:client:spawnpump')
 AddEventHandler('mms-oilpump:client:spawnpump', function()
-    TriggerServerEvent('mms-oilpumps:server:activatepump')
-    Citizen.Wait(1000)
-    TriggerServerEvent('mms-oilpumps:server:spawnpump')
+    local ped = PlayerPedId()
+    local playerpos = GetEntityCoords(ped)
+    local valentine = Config.TownValentine
+    local rhodes = Config.TownRhodes
+    local strawberry = Config.TownStrawberry
+    local blackwater = Config.TownBlackwater
+    local annesburg = Config.TownAnnesburg
+    local vanhorn = Config.TownVanhorn
+    local saintdenise = Config.TownSaintdenise
+    local tumbleweed = Config.TownTumbleweed
+    local armadillo = Config.TownArmadillo
+    local distancevalentine = #(playerpos - valentine)
+    local distancerhodes = #(playerpos - rhodes)
+    local distancestrawberry = #(playerpos - strawberry)
+    local distanceblackwater = #(playerpos - blackwater)
+    local distanceannesburg = #(playerpos - annesburg)
+    local distancevanhorn = #(playerpos - vanhorn)
+    local distancesaintdenise = #(playerpos - saintdenise)
+    local distancetumbleweed = #(playerpos - tumbleweed)
+    local distancearmadillo = #(playerpos - armadillo)
+    print(distanceannesburg) print(distancearmadillo) print(distanceblackwater) print(distancerhodes) print(distancesaintdenise)
+    print(distancestrawberry) print(distancetumbleweed) print(distancevalentine) print(distancevanhorn)
+        if distancevalentine >= Config.TownDistanceNeeded and distancerhodes >= Config.TownDistanceNeeded and distancestrawberry >= Config.TownDistanceNeeded and distanceblackwater >= Config.TownDistanceNeeded and distanceannesburg >= Config.TownDistanceNeeded and distancevanhorn >= Config.TownDistanceNeeded and distancesaintdenise >= Config.TownDistanceNeeded and distancetumbleweed >= Config.TownDistanceNeeded and distancearmadillo >= Config.TownDistanceNeeded then
+        TriggerServerEvent('mms-oilpumps:server:activatepump')
+        Citizen.Wait(1000)
+        TriggerServerEvent('mms-oilpumps:server:spawnpump')
+    else
+        RSGCore.Functions.Notify('Pumpen können nicht in der nähe von Städten Platziert werden!', 'error', 3000)
+        TriggerServerEvent('mms-oilpumps:server:givebackpumpitem')
+    end
 end)
 
 RegisterNetEvent('mms-oilpumps:client:spawnpump2', function(model, ownedCid, spawnedpumpid, storage, weight)
@@ -298,7 +325,7 @@ function WorkPump()
        stash = 'player_' .. pumpid
        local item = 'oil'
        local oil = Config.AddOil
-       TriggerServerEvent('inventory:server:AddItemToStash', stash, item, oil)
+       TriggerServerEvent('mms-oilpumps:server:AddItemToStash', stash, item, oil)
        Citizen.Wait(Config.WorkTime)
     end
     return

@@ -108,7 +108,7 @@ RegisterServerEvent('mms-oilpumps:server:hasplayerpump', function(pumpid)
     end)
 end)
 
-RegisterServerEvent('inventory:server:AddItemToStash', function(stash, item, oil)
+RegisterServerEvent('mms-oilpumps:server:AddItemToStash', function(stash, item, oil)
     MySQL.query('SELECT * FROM pumps_stock WHERE stash = ? AND item = ?',{stash, item} , function(result)
         if result[1] ~= nil then
             local stockadd = result[1].oil + oil
@@ -250,7 +250,12 @@ RSGCore.Functions.CreateUseableItem("oilpump", function(source, item)
         TriggerClientEvent("inventory:client:ItemBox", source, RSGCore.Shared.Items['oilpump'], "remove")
     end
 end)
-
+RegisterServerEvent('mms-oilpumps:server:givebackpumpitem', function()
+    local src = source
+    local Player = RSGCore.Functions.GetPlayer(src)
+    Player.Functions.AddItem('oilpump', 1)
+    TriggerClientEvent("inventory:client:ItemBox", src, RSGCore.Shared.Items['oilpump'], "add")
+end)
 
 
 --------------------------------------------------------------------------------------------------

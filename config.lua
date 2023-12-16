@@ -3,8 +3,8 @@ Config = {}
 Config.AddOil = 10         ---------------- Die Pumpe Fördert 10 Öl Alle Worktime
 Config.WorkTime = 5000    ---------------- 5000 = alle 5 Sekunden Fördert die Pumpe AddOil
 
-Config.pumpblipSprite= 'blip_code_center_on_horse'
-Config.pumpblipScale = 4.5
+Config.pumpblipSprite= 'blip_donate_food'
+Config.pumpblipScale = 5.0
 Config.pumpblipName = 'Deine Ölpumpe'
 
 Config.Dealer = {
@@ -41,3 +41,20 @@ Config.pumpid = {
     },
 
 }
+
+
+------------------------- Config  Town Distance
+
+Config.TownDistanceNeeded = 1000
+
+---- Town Coords Middle of Town ----
+Config.TownValentine = vector3(-281.13, 715.79, 113.93)  --Check
+Config.TownRhodes = vector3(1341.21, -1277.12, 76.94)  --Check
+Config.TownStrawberry = vector3(-1798.92, -457.03, 159.48)  --Check
+Config.TownBlackwater = vector3(-850.22, -1298.28, 43.37)  --Check
+Config.TownAnnesburg = vector3(2919.48, 1368.80, 45.24)  -- Check
+Config.TownVanhorn = vector3(2962.95, 547.93, 44.50)   -- Check
+Config.TownSaintdenise = vector3(2613.23, -1216.01, 53.39)   --Check
+Config.TownTumbleweed = vector3(-5506.68, -2941.55, -1.80)   --Check
+Config.TownArmadillo = vector3(-3689.10, -2609.74, -14.03)   --Check
+
