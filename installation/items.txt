@@ -1,0 +1,5 @@
+ -- mms-oilpumps
+
+    ['oilpump']  = {['name'] = 'oilpump',  ['label'] = 'Ölpumpe',  ['weight'] = 0,  ['type'] = 'item', ['image'] = 'oilpump.png',  ['unique'] = false, ['useable'] = true,  ['shouldClose'] = true, ['combinable'] = nil, ['level'] = 0, ['description'] = 'Ölpumpe'},
+    ['oil']  = {['name'] = 'oil',  ['label'] = 'Öl',  ['weight'] = 1,  ['type'] = 'item', ['image'] = 'oil.png',  ['unique'] = false, ['useable'] = false,  ['shouldClose'] = false, ['combinable'] = nil, ['level'] = 0, ['description'] = 'Öl'},
+
