@@ -1,7 +1,7 @@
 Config = {}
 
-Config.AddOil = 10         ---------------- Die Pumpe Fördert 10 Öl Alle Worktime
-Config.WorkTime = 5000    ---------------- 5000 = alle 5 Sekunden Fördert die Pumpe AddOil
+Config.AddOil = 10         ---------------- oil amount that added every min
+Config.WorkTime = 60000    ---------------- 60000 = every 1 min the pump add oil 
 
 Config.pumpblipSprite= 'blip_donate_food'
 Config.pumpblipScale = 5.0
