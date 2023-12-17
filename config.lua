@@ -1,7 +1,7 @@
 Config = {}
 
 Config.AddOil = 10         ---------------- oil amount that added every min
-Config.WorkTime = 5000    ---------------- 60000 = every 1 min the pump add oil 
+Config.WorkTime = 60000    ---------------- 60000 = every 1 min the pump add oil 
 
 Config.pumpblipSprite= 'blip_donate_food'
 Config.pumpblipScale = 5.0
@@ -43,7 +43,7 @@ Config.shops = {
 
 ------------------------- Config  Town Distance
 
-Config.TownDistanceNeeded = 10
+Config.TownDistanceNeeded = 1000
 
 ---- Town Coords Middle of Town ----
 Config.TownValentine = vector3(-281.13, 715.79, 113.93)  --Check
