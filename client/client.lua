@@ -1,5 +1,5 @@
 local RSGCore = exports['rsg-core']:GetCoreObject()
-
+local FeatherMenu =  exports['feather-menu'].initiate()
 pumpid = nil
 local spawnedPump = nil
 local isSpawned = false
@@ -53,7 +53,7 @@ Citizen.CreateThread(function()
     for shop,v in pairs(Config.shops) do
         exports['rsg-core']:createPrompt(v.name, v.coords, RSGCore.Shared.Keybinds['J'],  (' ') .. v.lable, {
             type = 'client',
-            event = 'mms-oilpumps:client:shopmenu',
+            event = 'mms-oilpumps:client:openshopmenu',
             args = {},
         })
         if v.showblip == true then
@@ -66,25 +66,10 @@ Citizen.CreateThread(function()
     
 end)
 
-RegisterNetEvent('mms-oilpumps:client:shopmenu', function()
-        
-    lib.registerContext(
-        {
-            id = 'shopmenu',
-            title = ('Pumpen Shop'),
-            position = 'top-right',
-            options = {
-                {
-                    title = ('Kaufe Pumpe.'),
-                    description = ('Kaufe eine Pumpe.' ),
-                    icon = 'fas fa-shop',
-                    event = 'mms-oilpumps:client:buypump',
-                },
-            }
-        }
-    )
-    lib.showContext('shopmenu')
-end)
+
+
+
+
 
 RegisterNetEvent('mms-oilpump:client:spawnpump')
 AddEventHandler('mms-oilpump:client:spawnpump', function()
@@ -108,8 +93,6 @@ AddEventHandler('mms-oilpump:client:spawnpump', function()
     local distancesaintdenise = #(playerpos - saintdenise)
     local distancetumbleweed = #(playerpos - tumbleweed)
     local distancearmadillo = #(playerpos - armadillo)
-    print(distanceannesburg) print(distancearmadillo) print(distanceblackwater) print(distancerhodes) print(distancesaintdenise)
-    print(distancestrawberry) print(distancetumbleweed) print(distancevalentine) print(distancevanhorn)
         if distancevalentine >= Config.TownDistanceNeeded and distancerhodes >= Config.TownDistanceNeeded and distancestrawberry >= Config.TownDistanceNeeded and distanceblackwater >= Config.TownDistanceNeeded and distanceannesburg >= Config.TownDistanceNeeded and distancevanhorn >= Config.TownDistanceNeeded and distancesaintdenise >= Config.TownDistanceNeeded and distancetumbleweed >= Config.TownDistanceNeeded and distancearmadillo >= Config.TownDistanceNeeded then
         TriggerServerEvent('mms-oilpumps:server:activatepump')
         Citizen.Wait(1000)
@@ -158,7 +141,7 @@ RegisterNetEvent('mms-oilpumps:client:spawnpump2', function(model, ownedCid, spa
     local pumpposz = pumpPos.z
     exports['rsg-core']:createPrompt(pumpid, pumpPos, RSGCore.Shared.Keybinds['J'], 'Deine Pumpe ' ..pumpid , {
         type = 'client',
-        event = 'mms-oilpumps:client:pumpmenu',
+        event = 'mms-oilpumps:client:openpumpmenu',
         args = {},
     })
     TriggerServerEvent('mms-oilpumps:server:updatetemppump', spawnedPump, pumpposx, pumpposy, pumpposz)
@@ -203,7 +186,7 @@ RegisterNetEvent('mms-oilpumps:client:spawnpump3', function(model, ownedCid, spa
     pumpid = spawnedpumpid
     exports['rsg-core']:createPrompt(pumpid, pumpPos, RSGCore.Shared.Keybinds['J'], 'Deine Pumpe ' ..pumpid , {
         type = 'client',
-        event = 'mms-oilpumps:client:pumpmenu',
+        event = 'mms-oilpumps:client:openpumpmenu',
         args = {},
     })
     TriggerServerEvent('mms-oilpumps:server:updatetemppump', spawnedPump, pumpposx, pumpposy, pumpposz)
@@ -215,98 +198,30 @@ RegisterNetEvent('mms-oilpumps:client:playerhaspump', function()
     RSGCore.Functions.Notify('Du hast bereits eine Pumpe!', 'error', 3000)
 end)
 
-RegisterNetEvent('mms-oilpumps:client:buypump', function()
-    TriggerServerEvent('mms-oilpumps:server:hasplayerpump', pumpid)
-end)
+
 
 RegisterNetEvent('mms-oilpumps:client:playerhasnopump', function()
-    PumpMenu()
-end)
-
-
-RegisterNetEvent('mms-oilpumps:client:pumpmenu', function()
-        
-    lib.registerContext(
-        {
-            id = 'pumpmenu',
-            title = ('Pumpen Menü'),
-            position = 'top-right',
-            options = {
-                {
-                    title = ('Pumpen Inventar.'),
-                    description = ('Pumpen Inventar.' ),
-                    icon = 'fas fa-info',
-                    event = 'mms-oilpumps:client:getstash',
-                },
-                {
-                    title = ('Pumpe Abreißen.'),
-                    description = ('Pumpe Abreißen.' ),
-                    icon = 'fas fa-x',
-                    event = 'mms-oilpumps:client:pumpdelete',
-                },
-            }
-        }
-    )
-    lib.showContext('pumpmenu')
-end)
-
-RegisterNetEvent('mms-oilpumps:client:getstash',function()
-    TriggerServerEvent('mms-oilpumps:server:pumpstash', stash)
-end)
-
-RegisterNetEvent('mms-oilpumps:client:ReturnStash', function(stashcount)
-    count = stashcount
-    lib.registerContext(
-        {
-            id = 'pumpstash',
-            title = ('Pumpen Inventar'),
-            position = 'top-right',
-            options = {
-                {
-                    title = ('Öl Produziert: '..stashcount),
-                    description = ('Öl Produziert: '..stashcount),
-                    icon = 'fas fa-info',
-                },
-                {
-                    title = ('Öl aus der Pumpe holen.'),
-                    description = ('Öl aus der Pumpe holen.'),
-                    icon = 'fas fa-info',
-                    event = 'mms-oilpumps:client:getoil',
-                },
-                
-            }
-        }
-    )
-    lib.showContext('pumpstash')
-end)
-
-RegisterNetEvent('mms-oilpumps:client:getoil',function()
-    input = lib.inputDialog('Öl Anzahl', {
-        { 
-            type = 'number',
-            label = 'Anzahl Öl',
-            required = true,
-            allowCancel = true,
-            min = 1, max = 500000,
-        },
+    Citizen.Wait(200)
+    ShopMenu2:Open({
+        startupPage = ShopPage2,
     })
-    if input then
-        oilamount = input[1]
-    else return
-    end
-    TriggerServerEvent('mms-oilpumps:server:getoil', stash,count,oilamount)
-
 end)
+
+
+
 
 RegisterNetEvent('mms-oilpumps:client:pumpdelete', function()
     if spawnedPump ~= nil then
-        TriggerServerEvent('mms-oilpumps:server:deletepump', spawnedPump)
+        local PlayerData = RSGCore.Functions.GetPlayerData()
+        local citizenid = PlayerData.citizenid
+        TriggerServerEvent('mms-oilpumps:server:deletepump', citizenid)
         TriggerServerEvent('mms-oilpumps:server:deletestash', stash)
         DeleteObject(spawnedPump)
         exports['rsg-core']:deletePrompt(pumpid)
         RemoveBlip(pumpBlip)
         spawnedPump = nil
         stash = nil
+        TriggerEvent('mms-oilpumps:client:closeshopmenu3')
         Wait()
     else
         RSGCore.Functions.Notify('Du hast keine Pumpe!', 'error', 3000)
@@ -338,62 +253,8 @@ function Checkpump()
     TriggerServerEvent('mms-oilpumps:server:checkpump',citizenid)
 end
 
-function PumpMenu()
-    menuData = {}
 
-    table.insert(menuData, {
-        header = 'Pumpen Shop',
-        isMenuHeader = true
-    })
 
-    for _, pumps in ipairs(Config.pumpid) do
-        table.insert(menuData, {
-            header = pumps.name,
-            txt = 'Preis: $' .. pumps.price .. ' Platz: ' .. pumps.storage,
-            params = {
-                event = 'mms-oilpumps:client:pumpinfo',
-                isServer = false,
-                args = {
-                    price = pumps.price,
-                    storage = pumps.storage,
-                    model = pumps.model,
-                    weight = pumps.weight
-                }
-            }
-        })
-    end
-
-    table.insert(menuData, {
-        header = 'Close Menu',
-        txt = '',
-        params = {
-            event = 'rsg-menu:closeMenu'
-        }
-    })
-
-    exports['rsg-menu']:openMenu(menuData)
-end
-
-RegisterNetEvent('mms-oilpumps:client:pumpinfo', function(data)
-    local price = data.price
-    local model = data.model
-    local storage = data.storage
-    local weight = data.weight
-
-    local info = exports['rsg-input']:ShowInput({
-        header = 'Pumpen Info',
-        inputs = {
-            {
-                text = 'Pumpen Name',
-                name = 'name',
-                type = 'text',
-                isRequired = true
-            }
-        }
-    })
-
-    TriggerServerEvent('mms-oilpumps:server:buypump', info.name, price, model, storage, weight)
-end)
 
 
 function Wait()
@@ -401,14 +262,331 @@ function Wait()
 end
 
 
+RegisterNetEvent('mms-oilpumps:client:openshopmenu',function()
+    ShopMenu:Open({
+        startupPage = ShopPage,
+    })
+end)
+RegisterNetEvent('mms-oilpumps:client:openpumpmenu',function()
+    ShopMenu3:Open({
+        startupPage = ShopPage3,
+    })
+end)
+RegisterNetEvent('mms-oilpumps:client:openpumpinv',function()
+    ShopMenu4:Open({
+        startupPage = ShopPage4,
+    })
+end)
 
---AddEventHandler("onResourceStop",function (resourceName)
---    if resourceName == GetCurrentResourceName() then
---       TriggerServerEvent('mms-oilpumps:server:deletepump', spawnedPump)
---       DeleteObject(spawnedPump)
---        exports['rsg-core']:deletePrompt(pumpid)
---        RemoveBlip(pumpBlip)
---        spawnedPump = nil
---    end
---end)
+RegisterNetEvent('mms-oilpumps:client:closeshopmenu',function()
+    ShopMenu:Close({ 
+    })
+end)
+RegisterNetEvent('mms-oilpumps:client:closeshopmenu2',function()
+    ShopMenu2:Close({ 
+    })
+end)
+RegisterNetEvent('mms-oilpumps:client:closeshopmenu4',function()
+    ShopMenu4:Close({ 
+    })
+end)
+RegisterNetEvent('mms-oilpumps:client:closeshopmenu3',function()
+    ShopMenu3:Close({ 
+    })
+end)
 
+Citizen.CreateThread(function()  --- RegisterFeather Menu
+ShopMenu = FeatherMenu:RegisterMenu('feather:character:menu', {
+    top = '50%',
+    left = '50%',
+    ['720width'] = '500px',
+    ['1080width'] = '600px',
+    ['2kwidth'] = '700px',
+    ['4kwidth'] = '900px',
+    style = {
+    },
+    contentslot = {
+        style = {
+            ['height'] = '300px',
+            ['min-height'] = '300px'
+        }
+    },
+    draggable = true,
+})
+ShopPage = ShopMenu:RegisterPage('first:page')
+ShopPage:RegisterElement('header', {
+    value = 'Pumpen Shop',
+    slot = "header",
+    style = {}
+})
+ShopPage:RegisterElement('line', {
+    slot = "header",
+    style = {}
+})
+ShopPage:RegisterElement('button', {
+    label = "Kaufe Pumpe",
+    style = {
+    },
+}, function()
+    TriggerServerEvent('mms-oilpumps:server:hasplayerpump')
+end)
+ShopPage:RegisterElement('button', {
+    label = "Schließe Shop",
+    style = {
+    },
+}, function()
+    TriggerEvent('mms-oilpumps:client:closeshopmenu')
+end)
+ShopPage:RegisterElement('subheader', {
+    value = "Pumpen Shop",
+    slot = "footer",
+    style = {}
+})
+ShopPage:RegisterElement('line', {
+    slot = "footer",
+    style = {}
+})
+end)
+--- Seite 2
+Citizen.CreateThread(function()  --- RegisterFeather Menu
+    ShopMenu2 = FeatherMenu:RegisterMenu('feather:character:menu2', {
+        top = '50%',
+        left = '50%',
+        ['720width'] = '500px',
+        ['1080width'] = '600px',
+        ['2kwidth'] = '700px',
+        ['4kwidth'] = '900px',
+        style = {
+        },
+        contentslot = {
+            style = {
+                ['height'] = '300px',
+                ['min-height'] = '300px'
+            }
+        },
+        draggable = true,
+    })
+    ShopPage2 = ShopMenu2:RegisterPage('secound:page')
+ShopPage2 = ShopMenu2:RegisterPage('secound:page')
+ShopPage2:RegisterElement('header', {
+    value = 'Pumpen Name',
+    slot = "header",
+    style = {}
+})
+ShopPage2:RegisterElement('line', {
+    slot = "header",
+    style = {}
+})
+local inputValue = ''
+ShopPage2:RegisterElement('input', {
+    label = "Pumpen Name:",
+    placeholder = "Name",
+    style = {
+    }
+}, function(data)
+    inputValue = data.value
+end)
+ShopPage2:RegisterElement('button', {
+    label = "Benenne Pumpe",
+    style = {
+    },
+}, function()
+    TriggerEvent('mms-oilpumps:client:pumpinfo', inputValue)
+end)
+ShopPage2:RegisterElement('button', {
+    label = "Schließe Shop",
+    style = {
+    },
+}, function()
+    TriggerEvent('mms-oilpumps:client:closeshopmenu2')
+end)
+ShopPage2:RegisterElement('subheader', {
+    value = "Pumpen Name Wählen",
+    slot = "footer",
+    style = {}
+})
+ShopPage2:RegisterElement('line', {
+    slot = "footer",
+    style = {}
+})
+end)
+
+
+----- Seite 3
+Citizen.CreateThread(function()  --- RegisterFeather Menu
+    ShopMenu3 = FeatherMenu:RegisterMenu('feather:character:menu3', {
+        top = '50%',
+        left = '50%',
+        ['720width'] = '500px',
+        ['1080width'] = '600px',
+        ['2kwidth'] = '700px',
+        ['4kwidth'] = '900px',
+        style = {
+        },
+        contentslot = {
+            style = {
+                ['height'] = '300px',
+                ['min-height'] = '300px'
+            }
+        },
+        draggable = true,
+    })
+
+ShopPage3 = ShopMenu3:RegisterPage('third:page')
+ShopPage3:RegisterElement('header', {
+    value = 'Pumpen Menu',
+    slot = "header",
+    style = {}
+})
+ShopPage3:RegisterElement('line', {
+    slot = "header",
+    style = {}
+})
+ShopPage3:RegisterElement('button', {
+    label = "Pumpen Inventar.",
+    style = {
+    },
+}, function()
+    TriggerEvent('mms-oilpumps:client:closeshopmenu3')
+    TriggerEvent('mms-oilpumps:client:openpumpinv')
+end)
+ShopPage3:RegisterElement('button', {
+    label = "Pumpe Abreißen.",
+    style = {
+    },
+}, function()
+    TriggerEvent('mms-oilpumps:client:pumpdelete')
+end)
+ShopPage3:RegisterElement('button', {
+    label = "Schließe Shop",
+    style = {
+    },
+}, function()
+    TriggerEvent('mms-oilpumps:client:closeshopmenu3')
+end)
+ShopPage3:RegisterElement('subheader', {
+    value = "Pumpen Menu",
+    slot = "footer",
+    style = {}
+})
+ShopPage3:RegisterElement('line', {
+    slot = "footer",
+    style = {}
+})
+
+end)
+
+
+----- Seite 4
+Citizen.CreateThread(function()  --- RegisterFeather Menu
+    ShopMenu4 = FeatherMenu:RegisterMenu('feather:character:menu4', {
+        top = '50%',
+        left = '50%',
+        ['720width'] = '500px',
+        ['1080width'] = '600px',
+        ['2kwidth'] = '700px',
+        ['4kwidth'] = '900px',
+        style = {
+        },
+        contentslot = {
+            style = {
+                ['height'] = '500px',
+                ['min-height'] = '500px'
+            }
+        },
+        draggable = true,
+    })
+
+ShopPage4 = ShopMenu4:RegisterPage('fourth:page')
+ShopPage4:RegisterElement('header', {
+    value = 'Produktions Menu',
+    slot = "header",
+    style = {}
+})
+ShopPage4:RegisterElement('line', {
+    slot = "header",
+    style = {}
+})
+TextDisplay = ShopPage4:RegisterElement('textdisplay', {
+    value = "Öl Produziert: NA",
+    style = {}
+})
+ShopPage4:RegisterElement('button', {
+    label = "Update Öl",
+    style = {
+    },
+}, function()
+    TriggerEvent('mms-oilpumps:client:getstash')
+end)
+
+local inputValue2 = 0
+ShopPage4:RegisterElement('input', {
+    label = "Öl Anzahl Entnehmen:",
+    placeholder = 0,
+    style = {
+    }
+}, function(data)
+    inputValue2 = data.value
+end)
+ShopPage4:RegisterElement('button', {
+    label = "Öl Entnehmen.",
+    style = {
+    },
+}, function()
+    TriggerEvent('mms-oilpumps:client:getoil', inputValue2)
+end)
+ShopPage4:RegisterElement('button', {
+    label = "Zurück zum Pumpen Menu",
+    style = {
+    },
+}, function()
+    TriggerEvent('mms-oilpumps:client:openpumpmenu')
+end)
+ShopPage4:RegisterElement('button', {
+    label = "Schließe Inventar",
+    style = {
+    },
+}, function()
+    TriggerEvent('mms-oilpumps:client:closeshopmenu4')
+end)
+ShopPage4:RegisterElement('subheader', {
+    value = "Öl Entnehmen",
+    slot = "footer",
+    style = {}
+})
+ShopPage4:RegisterElement('line', {
+    slot = "footer",
+    style = {}
+})
+end)
+
+
+RegisterNetEvent('mms-oilpumps:client:getstash',function()
+    TriggerServerEvent('mms-oilpumps:server:pumpstash', stash)
+end)
+RegisterNetEvent('mms-oilpumps:client:ReturnStash', function(stashcount) ----------------
+    count = stashcount
+    
+    TextDisplay:update({
+        value = "Öl Produziert: " .. count,
+        style = {}
+    }) 
+end)
+
+
+RegisterNetEvent('mms-oilpumps:client:getoil',function(inputValue2)
+    local oilamount = tonumber(inputValue2)
+    TriggerServerEvent('mms-oilpumps:server:getoil', stash,oilamount)
+    TriggerEvent('mms-oilpumps:client:closeshopmenu4')
+end)
+
+
+RegisterNetEvent('mms-oilpumps:client:pumpinfo',function(inputValue)
+    local price = Config.price
+    local model = Config.model
+    local storage = Config.storage
+    local weight = Config.weight
+    local name = inputValue
+    TriggerServerEvent('mms-oilpumps:server:registerpump', name, price, model, storage, weight)
+    TriggerEvent('mms-oilpumps:client:closeshopmenu2')
+end)

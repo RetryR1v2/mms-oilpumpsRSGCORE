@@ -29,13 +29,12 @@ local function CheckVersion()
     end)
 end
 
-RegisterServerEvent('mms-oilpumps:server:buypump', function(name, price, model, storage, weight)
+RegisterServerEvent('mms-oilpumps:server:registerpump', function(name, price, model, storage, weight)
     local src = source
     local Player = RSGCore.Functions.GetPlayer(src)
     local randomLetters = string.char(math.random(65, 90), math.random(65, 90), math.random(65, 90))
     local pumpid = randomLetters .. math.random(100, 999)
     local citizenid = Player.PlayerData.citizenid
-    
     -- Check if the player has enough money
     if Player.Functions.GetItemByName('oilpump') and Player.Functions.GetItemByName('oilpump').amount >=1 then
         RSGCore.Functions.Notify('Du hast bereits eine Ölpumpe', 'error')
@@ -97,7 +96,7 @@ AddEventHandler('mms-oilpumps:server:spawnpump', function()
     end)
 end)
 
-RegisterServerEvent('mms-oilpumps:server:hasplayerpump', function(pumpid)
+RegisterServerEvent('mms-oilpumps:server:hasplayerpump', function()
     local src = source
     MySQL.query('SELECT * FROM mms_pumps WHERE pumpid = ?',{pumpid} , function(result)
         if result[1] ~= nil then
@@ -129,11 +128,13 @@ RegisterServerEvent('mms-oilpumps:server:pumpstash', function(stash)
     end)
 end)
 
-RegisterServerEvent('mms-oilpumps:server:getoil', function(stash,count,oilamount)
+
+
+RegisterServerEvent('mms-oilpumps:server:getoil', function(stash,oilamount)
     local src = source
     local Player = RSGCore.Functions.GetPlayer(src)
     MySQL.query('SELECT * FROM pumps_stock WHERE stash = ? ',{stash} , function(result)
-        if result[1] ~= nil and result[1].oil >= oilamount then
+        if result[1].oil ~= nil and result[1].oil >= oilamount then
             local stockadd = result[1].oil - oilamount
             MySQL.update('UPDATE pumps_stock SET oil = ? WHERE stash = ? ',{stockadd, stash})
             TriggerClientEvent("inventory:client:ItemBox", src, RSGCore.Shared.Items['oil'], "add")
@@ -206,36 +207,25 @@ AddEventHandler('mms-oilpumps:server:updatetemppump', function(temppump, pumppos
     end)
 end)
 
-RegisterServerEvent('mms-oilpumps:server:deletepump', function(pump)
+RegisterServerEvent('mms-oilpumps:server:deletepump', function(citizenid)
     local src = source
     local Player = RSGCore.Functions.GetPlayer(src)
     local model = nil
 
-    MySQL.query('SELECT `model` FROM `mms_pumps` WHERE temppump = ?', {pump}, function(result)
-        if result and #result > 0 then
-            for i = 1, #result do
-                local row = result[i]
-                model = row.model
-
-                for i = 1, #Config.pumpid do
-                    if model == Config.pumpid[i].model then
-                        break
-                    end
+    MySQL.query('SELECT `model` FROM `mms_pumps` WHERE citizenid = ?', {citizenid}, function(result)
+            if result and #result > 0 then
+                for i = 1, #result do
+                    local row = result[i]
                 end
-
-
-                MySQL.execute('DELETE FROM `mms_pumps` WHERE temppump = ?', { pump }, function(rowsChanged)
-                    if rowsChanged ~= nil then
-                    else
-                        print('No matching rows found.')
-                    end
-                end)
-
             end
-        else
-            RSGCore.Functions.Notify(src, 'Du hast keine Aktive Pumpe!', 'error', 3000)
-        end
-    end)
+        end)
+        MySQL.execute('DELETE FROM `mms_pumps` WHERE citizenid = ?', { citizenid }, function(rowsChanged)
+            if rowsChanged ~= nil then
+            else
+                print('No matching rows found.')
+            end
+        end)
+        
 end)
 
 

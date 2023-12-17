@@ -1,7 +1,7 @@
 Config = {}
 
 Config.AddOil = 10         ---------------- oil amount that added every min
-Config.WorkTime = 60000    ---------------- 60000 = every 1 min the pump add oil 
+Config.WorkTime = 5000    ---------------- 60000 = every 1 min the pump add oil 
 
 Config.pumpblipSprite= 'blip_donate_food'
 Config.pumpblipScale = 5.0
@@ -18,7 +18,7 @@ Config.Dealer = {
 }
 
 Config.shops = {
-    { 
+    {
         lable = 'Valentine Pumpen Händler',
         name = 'Pumpen Händler Valentine',
         coords = vector3(-363.93, 810.41, 116.02),
@@ -26,26 +26,24 @@ Config.shops = {
         blipName = 'Pumpen Händler Valentine',
         blipSprite = 'blip_ambient_tithing',
         blipScale = 4.5
-    },  
+    },
     -- add more as required-345.01, 807.78, 116.66
 }
 
-Config.pumpid = {
-    {
-        hash = -824257932, 
-        model = 'p_enginefactory01x',
-        name = 'Ölpumpe',
-        price = 2000,
-        storage = 50,
-        weight = 50000000,
-    },
 
-}
+--------- Pumpen Settings
 
+        Config.hash = -824257932
+        Config.model = 'p_enginefactory01x'
+        Config.name = 'Ölpumpe'
+        Config.price = 2000
+        Config.storage = 10
+        Config.weight = 500000000
+ 
 
 ------------------------- Config  Town Distance
 
-Config.TownDistanceNeeded = 1000
+Config.TownDistanceNeeded = 10
 
 ---- Town Coords Middle of Town ----
 Config.TownValentine = vector3(-281.13, 715.79, 113.93)  --Check
