@@ -248,6 +248,34 @@ RegisterServerEvent('mms-oilpumps:server:givebackpumpitem', function()
 end)
 
 
+
+------------------ Crafting -------------------------
+
+
+
+RegisterServerEvent('mms-oilpumps:server:crafting', function(anzahl, zutat,zutatneeded,ergebnis,ergebnisanzahl)
+    local src = source
+    local Player = RSGCore.Functions.GetPlayer(src)
+    
+    if Player.Functions.GetItemByName(zutat) and Player.Functions.GetItemByName(zutat).amount >= zutatneeded * anzahl then
+        TriggerClientEvent('mms-oilpumps:client:craftingtime',src)
+        Citizen.Wait(Config.Crafttime - 200)
+        Player.Functions.RemoveItem(zutat, zutatneeded * anzahl)
+        Player.Functions.AddItem(ergebnis, ergebnisanzahl * anzahl)
+        TriggerClientEvent("inventory:client:ItemBox", src, RSGCore.Shared.Items[zutat], "remove")
+        TriggerClientEvent("inventory:client:ItemBox", src, RSGCore.Shared.Items[ergebnis], "add")
+        TriggerClientEvent('ox_lib:notify', src, {title = 'Du hast ' .. zutatneeded * anzahl .. ' ' .. zutat .. ' zu ' .. ergebnisanzahl * anzahl .. ' ' .. ergebnis .. ' Verarbeitet.'      , description =  'Hergestellt', type = 'succes' , duration = 5000 })
+    else
+        TriggerClientEvent('ox_lib:notify', src, {title = 'Du hast nicht genug ' .. zutat .. ' zum Verarbeiten.' , description =  zutat ..' Fehlt', type = 'error', duration = 5000 }) 
+    end
+
+end)
+
+
+
+
+
+
 --------------------------------------------------------------------------------------------------
 -- start version check
 --------------------------------------------------------------------------------------------------

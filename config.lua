@@ -56,3 +56,55 @@ Config.TownSaintdenise = vector3(2613.23, -1216.01, 53.39)   --Check
 Config.TownTumbleweed = vector3(-5506.68, -2941.55, -1.80)   --Check
 Config.TownArmadillo = vector3(-3689.10, -2609.74, -14.03)   --Check
 
+----------------- Crafting Part -------------------
+
+Config.Crafter = {
+    { 
+        CrafterPos = vector4(-354.42, 811.27, 116.37, 201.88),
+        model = 'U_M_M_BwmStablehand_01',
+    },
+    
+    
+    -- add more as required
+    }
+    
+    Config.crafter = {
+        {
+            lable = 'Valentine Öl Verarbeiter',
+            name = 'Öl Verarbeiter Valentine',
+            coords = vector3(-354.42, 811.27, 116.37),
+            showblip = true,
+            blipName = 'Öl Verarbeiter Valentine',
+            blipSprite = 'blip_shop_blacksmith',
+            blipScale = 4.5
+        },
+        -- add more as required-345.01, 807.78, 116.66
+    }
+
+--------------------------------------------- CRAFTING ---------------------------
+
+Config.Crafttime = 5000
+    ------ reciepes 
+    Config.Reciepes = {
+        {
+            id = 1,     --- only  1 id per reciepe  reciepe 2 need id 2 reciepe3 need 3 .....
+            active = true,
+            name = 'Cleankit Herstellen',
+            zutat = 'oil',
+            zutatneeded = 10,
+            ergebnis = 'cleankit',
+            ergebnisanzahl = 2,
+            
+        },
+        {
+            id = 2,
+            active = true,
+            name = 'Öl für Zug Herstellen',
+            zutat = 'oil',
+            zutatneeded = 10,
+            ergebnis = 'trainoil',
+            ergebnisanzahl = 1,
+            
+        },
+
+     }

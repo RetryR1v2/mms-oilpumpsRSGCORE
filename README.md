@@ -6,6 +6,11 @@
 - You can get the Oil out of Pump in Pump Menu
 - Oil Pumps cant Placed in or Near Towns need a Distance of 1000 Meters (Defined in Config)
 
+# Chnagelog
+
+- Added Crafting Menü Feather Menu
+- Added Item Trainoil
+
 # installation 
 
 - Add Images to rsg-inventory -> html -> images

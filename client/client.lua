@@ -258,7 +258,7 @@ end
 
 
 function Wait()
-    Citizen.Wait(Config.WorkTime)
+    Citizen.Wait(5000)
 end
 
 
@@ -590,3 +590,188 @@ RegisterNetEvent('mms-oilpumps:client:pumpinfo',function(inputValue)
     TriggerServerEvent('mms-oilpumps:server:registerpump', name, price, model, storage, weight)
     TriggerEvent('mms-oilpumps:client:closeshopmenu2')
 end)
+
+----------------------------------------CRAFTING PART ---------------------------------------
+
+Citizen.CreateThread(function()
+    for Crafter,v in pairs(Config.Crafter) do
+    local model = v.model
+    RequestModel(model)
+    while not HasModelLoaded(model) do
+        RequestModel(model)
+        Wait(1)
+    end
+    local coords = v.CrafterPos
+    local crafter = CreatePed(model, coords.x, coords.y, coords.z - 1.0, coords.w, false, false, 0, 0)
+    Citizen.InvokeNative(0x283978A15512B2FE, crafter, true)
+    SetEntityCanBeDamaged(crafter, false)
+    SetEntityInvincible(crafter, true)
+    FreezeEntityPosition(crafter, true)
+    SetBlockingOfNonTemporaryEvents(crafter, true)
+    Wait(1)
+    end
+
+    for crafter,v in pairs(Config.crafter) do
+        exports['rsg-core']:createPrompt(v.name, v.coords, RSGCore.Shared.Keybinds['J'],  (' ') .. v.lable, {
+            type = 'client',
+            event = 'mms-oilpumps:client:opencraftingmenu',
+            args = {},
+        })
+        if v.showblip == true then
+            local crafting = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, v.coords)
+            SetBlipSprite(crafting, GetHashKey(v.blipSprite), true)
+            SetBlipScale(crafting, v.blipScale)
+            Citizen.InvokeNative(0x9CB1A1623062F402, crafting, v.blipName)
+        end
+    end
+    
+end)
+
+Citizen.CreateThread(function()  --- RegisterFeather Menu
+    
+    CraftingMenu = FeatherMenu:RegisterMenu('feather:character:menu2', {
+        top = '50%',
+        left = '50%',
+        ['720width'] = '500px',
+        ['1080width'] = '600px',
+        ['2kwidth'] = '700px',
+        ['4kwidth'] = '900px',
+        style = {
+        },
+        contentslot = {
+            style = {
+                ['height'] = '500px',
+                ['min-height'] = '500px'
+            }
+        },
+        draggable = true,
+    })
+    CraftingPage1 = CraftingMenu:RegisterPage('first:page')
+
+    CraftingPage1:RegisterElement('header', {
+        value = 'Öl Verarbeiter',
+        slot = "header",
+        style = {}
+    })
+    CraftingPage1:RegisterElement('line', {
+        slot = "header",
+        style = {}
+    })
+    
+    for reciepes, v in pairs(Config.Reciepes) do    
+    if v.active == true then
+        CraftingPage1:RegisterElement('button', {
+            label = v.name,
+            style = {
+            },
+        }, function()
+            v.id:RouteTo()
+        end)
+    end
+    end
+    
+    CraftingPage1:RegisterElement('button', {
+        label = "Schließe Verarbeiter",
+        style = {
+        },
+    }, function()
+        TriggerEvent('mms-oilpumps:client:closecraftingmenu')
+    end)
+    CraftingPage1:RegisterElement('subheader', {
+        value = "Öl Verarbeiter",
+        slot = "footer",
+        style = {}
+    })
+    CraftingPage1:RegisterElement('line', {
+        slot = "footer",
+        style = {}
+    })
+---------- Register Crafting Pages
+    
+    for reciepes, v in pairs(Config.Reciepes) do    
+        if v.active == true then
+            v.id = CraftingMenu:RegisterPage(v.id)  
+            v.id:RegisterElement('header', {
+                value = v.name,
+                slot = "header",
+                style = {}
+            })
+            v.id:RegisterElement('line', {
+                slot = "header",
+                style = {}
+            })
+            TextDisplay = v.id:RegisterElement('textdisplay', {
+                value = "Rezept: " .. v.zutatneeded .. ' ' .. v.zutat .. ' = ' .. v.ergebnisanzahl .. ' ' .. v.ergebnis,
+                style = {}
+            })
+            local inputValue = ''
+            v.id:RegisterElement('input', {
+                label = "Wieviele Herstellen :",
+                placeholder = 0,
+                style = {
+                }
+            }, function(data)
+                inputValue = data.value
+            end)
+            v.id:RegisterElement('button', {
+                label = "Herstellen",
+                style = {
+                },
+            }, function()
+                local zutat = v.zutat
+                local zutatneeded = v.zutatneeded
+                local ergebnis = v.ergebnis
+                local ergebnisanzahl = v.ergebnisanzahl
+                TriggerEvent('mms-oilpumps:client:startcrafting' , inputValue , zutat,zutatneeded,ergebnis,ergebnisanzahl)
+            end)
+            v.id:RegisterElement('button', {
+                label = "Zurück zum Crafting Menü",
+                style = {
+                },
+            }, function()
+                CraftingMenu:Open({
+                    startupPage = CraftingPage1,
+                })
+            end)
+            v.id:RegisterElement('button', {
+                label = "Schließe Verarbeiter",
+                style = {
+                },
+            }, function()
+                TriggerEvent('mms-oilpumps:client:closecraftingmenu')
+            end)
+
+        end
+    end
+
+
+
+end)
+
+RegisterNetEvent('mms-oilpumps:client:startcrafting',function(inputValue , zutat,zutatneeded,ergebnis,ergebnisanzahl)
+    local anzahl = tonumber(inputValue)
+    TriggerServerEvent('mms-oilpumps:server:crafting' , anzahl , zutat,zutatneeded,ergebnis,ergebnisanzahl)
+    TriggerEvent('mms-oilpumps:client:closecraftingmenu')
+end)
+
+
+
+    RegisterNetEvent('mms-oilpumps:client:opencraftingmenu',function()
+        CraftingMenu:Open({
+            startupPage = CraftingPage1,
+        })
+    end)
+    
+    RegisterNetEvent('mms-oilpumps:client:closecraftingmenu',function()
+        CraftingMenu:Close({
+        })
+    end)
+
+    RegisterNetEvent('mms-oilpumps:client:craftingtime',function()
+        lib.progressCircle({
+            duration = Config.Crafttime, -- Adjust the duration as needed
+            label = 'Verarbeite Öl',
+            position = 'bottom',
+            useWhileDead = false,
+        })
+    end)
